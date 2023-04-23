@@ -1,0 +1,5 @@
+Requests/*.xml
+.gitingnore
+config.xml
+__pycache__
+debug.py

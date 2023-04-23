@@ -1,0 +1,8 @@
+<CONFIG>
+<CONFIG-ITEM>
+<BASE_URL>https://qualysapi.qg1.apps.qualys.com.au</BASE_URL>
+<USERNAME>replace-name</USERNAME>
+<PASSWORD>replace-password</PASSWORD>
+<TAG>replace-tag</TAG>
+</CONFIG-ITEM>
+</CONFIG>
