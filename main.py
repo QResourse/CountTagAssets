@@ -2,6 +2,8 @@ import Config as Conf
 import Lib.Functions as Func
 import pandas as pd 
 import json
+import csv
+
 
 BASE = Conf.base
 GATEWAY = BASE.replace("qualysapi","gateway")
@@ -74,7 +76,10 @@ for tagItem  in tagsList:
   output.append(msg)
   CSV.append({TagName,numberOfHostsPerTag,numberOfHostsPerAwsTag})
 print("-----------------------------------------------------------------------------")
-print(CSV)
+with open('output.csv', mode='w') as file:
+    writer = csv.writer(file)
+    for row in CSV:
+        writer.writerow(row)
 
 
 
