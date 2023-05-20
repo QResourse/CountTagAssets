@@ -70,6 +70,30 @@ def getJsonTagPayload(tag):
     }
     return payload
 
+def getJsonAwsTagPayload(key,value):
+    ##payload = "<ServiceRequest> \r\n <preferences>\r\n <limitResults> 10000 </limitResults>\r\n<</preferences>\r\n<filters> \r\n <Criteria field=\"tagName\" operator=\"EQUALS\">"+str(tag)+"</Criteria> \r\n </filters> \r\n</ServiceRequest>"
+    #payload = "<ServiceRequest>\n\t<preferences>\n\t\t<limitResults>10</limitResults>\n\t</preferences>\n\t<filters>\n    \t<Criteria field=\"tagName\" operator=\"EQUALS\">"+str(tag)+"</Criteria>\n\t</filters>\n</ServiceRequest>"
+    payload = {
+    "filters": [
+            {
+            "field": "aws.ec2.instanceState",
+            "operator": "EQUALS",
+            "value": "RUNNING"
+        },
+        {
+            "field": "aws.tags.key",
+            "operator": "CONTAINS",
+            "value": key
+        },
+        {
+            "field": "aws.tags.value",
+            "operator": "CONTAINS",
+            "value": value
+        }
+    ]
+    }
+    return payload
+
 #will be used by host API to get host based on time critira 
 def getXmlPayload(id,delta):
     payload = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\r\n<ServiceRequest>\r\n <preferences>\r\n <limitResults>10000</limitResults></preferences>\r\n   <filters>\r\n        <Criteria field=\"lastVulnScan\" operator=\"GREATER\">"+str(getSearchTime(delta))+"</Criteria>\r\n <Criteria field=\"id\" operator=\"GREATER\">"+str(id)+"</Criteria>\r\n    </filters>\r\n</ServiceRequest>"

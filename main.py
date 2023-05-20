@@ -41,13 +41,15 @@ tagsList = df.values.tolist()
 
 output = []
 index = 0 
-tagValue = tagsList[0]
-for tagValue  in tagsList:
-  assets= tagValue[1]
-  tag = tagValue[0]
-  payload = json.dumps(Func.getJsonTagPayload(tag))
+tagItem = tagsList[0]
+
+for tagItem  in tagsList:
+  TagName = tagItem[0]
+  AwsTagName = tagItem[1]
+  AwsTagValue = tagItem[2]
+  payload = json.dumps(Func.getJsonTagPayload(TagName))
   response = Func.postRequest(REQUEST_URL,payload,header)
-  index+=1
+
   if (response.ok != True):
     print("Failed to get response from API")
     exit()
@@ -55,16 +57,24 @@ for tagValue  in tagsList:
   data = response.json()
 
   numberOfHostsPerTag = data['count']
-  if(int(numberOfHostsPerTag) == int(assets)):
-    msg = "success: tag" + str(tag) + " expect result are "+ str(assets)+ " match actual result: " + str(numberOfHostsPerTag)
+
+  payload = json.dumps(Func.getJsonAwsTagPayload(AwsTagName,AwsTagValue))
+  response = Func.postRequest(REQUEST_URL,payload,header)
+  if (response.ok != True):
+    print("Failed to get response from API")
+    exit()
+
+  data = response.json()
+  numberOfHostsPerAwsTag = data['count']
+  if(int(numberOfHostsPerTag) == int(numberOfHostsPerAwsTag)):
+    msg = "success: tag" + str(TagName) + " expect result are "+ str(numberOfHostsPerTag)+ " match actual result: " + str(numberOfHostsPerAwsTag)
   else:
-    msg = "failed: tag " + str(tag) + " expect result are "+ str(assets)+ " actual result: " + str(numberOfHostsPerTag)
-    
-    print(msg)
-    output.append(msg)
+    msg = "failed: tag " + str(TagName) + " expect result are "+ str(numberOfHostsPerTag)+ " actual result: " + str(numberOfHostsPerAwsTag)
+  print(msg)
+  output.append(msg)
 
-
-  print(output)
+print("-----------------------------------------------------------------------------")
+print(output)
 
 
 
