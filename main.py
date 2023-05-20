@@ -4,9 +4,6 @@ import pandas as pd
 import json
 
 BASE = Conf.base
-
-
-BASE = Conf.base
 GATEWAY = BASE.replace("qualysapi","gateway")
 cleanPassword = Conf.PASSWORD.replace("%","%25")
 safePassword = cleanPassword.replace("&","%26")
@@ -40,14 +37,17 @@ tagsList = df.values.tolist()
 
 
 output = []
+CSV = []
 index = 0 
 tagItem = tagsList[0]
-
+CSV.append({"TagName","TagCount","QqlCount"})
 for tagItem  in tagsList:
+  result = []
   TagName = tagItem[0]
   AwsTagName = tagItem[1]
   AwsTagValue = tagItem[2]
   payload = json.dumps(Func.getJsonTagPayload(TagName))
+  print("Counting assets for tag : " + TagName)
   response = Func.postRequest(REQUEST_URL,payload,header)
 
   if (response.ok != True):
@@ -57,7 +57,7 @@ for tagItem  in tagsList:
   data = response.json()
 
   numberOfHostsPerTag = data['count']
-
+  print("Counting assets for tag : " + AwsTagName)
   payload = json.dumps(Func.getJsonAwsTagPayload(AwsTagName,AwsTagValue))
   response = Func.postRequest(REQUEST_URL,payload,header)
   if (response.ok != True):
@@ -72,9 +72,9 @@ for tagItem  in tagsList:
     msg = "failed: tag " + str(TagName) + " expect result are "+ str(numberOfHostsPerTag)+ " actual result: " + str(numberOfHostsPerAwsTag)
   print(msg)
   output.append(msg)
-
+  CSV.append({TagName,numberOfHostsPerTag,numberOfHostsPerAwsTag})
 print("-----------------------------------------------------------------------------")
-print(output)
+print(CSV)
 
 
 
