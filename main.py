@@ -82,4 +82,4 @@ with open('output.csv', mode='w') as file:
         writer.writerow(row)
 
 
-
+print("output.csv had been written to script folder")
