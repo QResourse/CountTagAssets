@@ -74,11 +74,12 @@ for tagItem  in tagsList:
     msg = "failed: tag " + str(TagName) + " expect result are "+ str(numberOfHostsPerTag)+ " actual result: " + str(numberOfHostsPerAwsTag)
   print(msg)
   output.append(msg)
-  CSV.append({TagName,numberOfHostsPerTag,numberOfHostsPerAwsTag})
+  CSV.append({str(TagName),str(numberOfHostsPerTag),str(numberOfHostsPerAwsTag)})
 print("-----------------------------------------------------------------------------")
 with open('output.csv', mode='w') as file:
     writer = csv.writer(file)
     for row in CSV:
+        print(row)
         writer.writerow(row)
 
 
